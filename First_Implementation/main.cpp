@@ -1,3 +1,4 @@
+#include <cmath>
 
 int main() { 
 // y - flux
@@ -6,7 +7,6 @@ int main() {
 // T - time_offset
 // w - frequncy
 // yavg - flux_average
-// w - error
 // arguments: y V t T w
 
 // Compute y average
@@ -18,22 +18,27 @@ int main() {
 
 }
 
-int compute_normilized_periodogram(double flux[], double flux_avg, double time[], double time_offset, double error, double varience){
-// function for computing P, arguments y, yavg, t, T, w scalar, V
+int compute_normalized_periodogram(double flux[], double flux_avg, double time[], double time_offset, double variance){
 
-// for each y, t
-    // cos_sum_squared += (y-yavg)cosw(t-T)
-// sum^2
+    double cos_sum_squared, cos_squared_sum, sin_sum_squared, sin_squared_sum;
 
-// for each y, t
-    // cos_squared_sum += (cosw(t-T))^2
+    for (int i = 0 ; i < sizeof(flux)/sizeof(flux[0]); i++){
+        cos_sum_squared += (flux[i] - flux_avg) * cos(variance * (time[i] - time_offset));
+    }
+    cos_sum_squared = pow(cos_sum_squared, 2);
 
-// for each y, t
-    // sin_sum_squared += (y-yavg)sinw(t-T)
-// sum^2
+    for (int i = 0 ; i < sizeof(flux)/sizeof(flux[0]); i++){
+        cos_squared_sum += pow(cos(variance * (time[i] - time_offset)), 2);
+    }
 
-// for each y, t
-    // sin_squared_sum += (sinw(t-T))^2
+    for (int i = 0 ; i < sizeof(flux)/sizeof(flux[0]); i++){
+        sin_sum_squared += (flux[i] - flux_avg) * cos(variance * (time[i] - time_offset));
+    }
+    sin_sum_squared = pow(sin_sum_squared, 2);
 
-// return 1/(2V)(cos_sum_squared/cos_squared_sum + sin_sum_squared/sin_squared_sum)
+    for (int i = 0 ; i < sizeof(flux)/sizeof(flux[0]); i++){
+        sin_squared_sum += pow(cos(variance * (time[i] - time_offset)), 2);
+    }
+
+    return 1 / (2 * variance) * (cos_sum_squared/cos_squared_sum + sin_sum_squared/sin_squared_sum)
 }
