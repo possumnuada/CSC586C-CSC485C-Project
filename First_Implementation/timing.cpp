@@ -3,12 +3,13 @@
 #include <chrono>   // std::chrono
 #include <numeric>  // std::accumulate()
 #include <algorithm>
+#include <vector>
 #include "../Data/cyclic-data.hpp"
 #include "lomb-scargle.hpp"
 
 int main()
 {
-    double * result; 
+    std::vector<double> result; 
     auto const benchmark_trials = 2000u;
     auto const threshold = 500llu;
 
@@ -16,7 +17,7 @@ int main()
 
     for( auto i = 0u; i < benchmark_trials; ++i )
     {
-        result = lomb_scargle( input_data,times,0llu,frequencies);
+        result = lomb_scargle( input_data,times,frequencies,0llu);
     }
 
     auto end_time = std::chrono::system_clock::now();

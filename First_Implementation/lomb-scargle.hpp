@@ -1,4 +1,5 @@
 #include <cmath>
+#include <vector>
 
 // y - flux
 // V - variance 
@@ -15,42 +16,35 @@
 
 // plot P
 
-double compute_normalized_periodogram(double flux[], double flux_avg, double time[], double time_offset, double variance, double frequency){
+
+std::vector<double> lomb_scargle(std::vector<double> flux, std::vector<double> time, std::vector<double> frequency, double variance){
 
     double cos_sum_squared, cos_squared_sum, sin_sum_squared, sin_squared_sum;
+    double flux_avg = std::accumulate( flux.begin(), flux.end(), 0.0)/ flux.size();
+    std::vector<double> periodogram(frequency.size());
 
-    for (int i = 0 ; i < sizeof(flux)/sizeof(flux[0]); i++){
-        cos_sum_squared += (flux[i] - flux_avg) * cos(frequency * (time[i] - time_offset));
+    for(int w = 0 ; w < frequency.size() ; w++){
+        for (int i = 0 ; i < flux.size(); i++){
+            cos_sum_squared += (flux[i] - flux_avg) * cos(frequency[w] * (time[i] - time[0]));
+        }
+        cos_sum_squared = pow(cos_sum_squared, 2);
+
+        for (int i = 0 ; i < flux.size(); i++){
+            cos_squared_sum += pow(cos(frequency[w] * (time[i] - time[0])), 2);
+        }
+
+        for (int i = 0 ; i < flux.size(); i++){
+            sin_sum_squared += (flux[i] - flux_avg) * cos(frequency[w] * (time[i] - time[0]));
+        }
+        sin_sum_squared = pow(sin_sum_squared, 2);
+
+        for (int i = 0 ; i < flux.size(); i++){
+            sin_squared_sum += pow(cos(frequency[w] * (time[i] - time[0])), 2);
+        }
+
+        periodogram[w] = 1 / (2 * variance) * (cos_sum_squared/cos_squared_sum + sin_sum_squared/sin_squared_sum);
     }
-    cos_sum_squared = pow(cos_sum_squared, 2);
 
-    for (int i = 0 ; i < sizeof(flux)/sizeof(flux[0]); i++){
-        cos_squared_sum += pow(cos(frequency * (time[i] - time_offset)), 2);
-    }
-
-    for (int i = 0 ; i < sizeof(flux)/sizeof(flux[0]); i++){
-        sin_sum_squared += (flux[i] - flux_avg) * cos(frequency * (time[i] - time_offset));
-    }
-    sin_sum_squared = pow(sin_sum_squared, 2);
-
-    for (int i = 0 ; i < sizeof(flux)/sizeof(flux[0]); i++){
-        sin_squared_sum += pow(cos(frequency * (time[i] - time_offset)), 2);
-    }
-
-    return 1 / (2 * variance) * (cos_sum_squared/cos_squared_sum + sin_sum_squared/sin_squared_sum);
-}
-
-double * lomb_scargle(double flux[], double time[],double variance, double frequncies[] ){
-    double * powers = new double[sizeof(frequncies)/sizeof(frequncies[0])];
-    double flux_avg = 0;
-    for (int i = 0 ; i < sizeof(flux)/sizeof(flux[0]); i++){
-        flux_avg += flux[i];
-    }
-    flux_avg /= (sizeof(flux)/sizeof(flux[0]));
-
-    for (int i = 0 ; i < sizeof(frequncies)/sizeof(frequncies[0]); i++){
-        powers[i] = compute_normalized_periodogram(flux,flux_avg,time,time[0],variance,frequncies[i]);    
-    }
-    return powers;
+    return periodogram;
 }
 
