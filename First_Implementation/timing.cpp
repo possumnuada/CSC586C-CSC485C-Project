@@ -23,8 +23,8 @@ int main()
     auto end_time = std::chrono::system_clock::now();
     auto elapsed_time = std::chrono::duration_cast< std::chrono::microseconds >( end_time - start_time );
 
-    for (int i = 0 ; i < sizeof(result)/sizeof(result[0]); i++){
-        std::cout << frequencies[i] << " " << result[i] << std::endl;
+    for (int i = 0 ; i < result.size(); i++){
+        std::cout << frequencies.at(i) << " " << result.at(i) << std::endl;
     }
     
     std::cout << "average time per run: "
