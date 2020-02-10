@@ -10,14 +10,14 @@
 int main()
 {
     std::vector<double> result; 
-    auto const benchmark_trials = 2000u;
+    auto const benchmark_trials = 1u;
     auto const threshold = 500llu;
 
     auto start_time = std::chrono::system_clock::now();
 
     for( auto i = 0u; i < benchmark_trials; ++i )
     {
-        result = lomb_scargle( input_data,times,frequencies,0llu);
+        result = lomb_scargle( input_data,times,frequencies,.1);
     }
 
     auto end_time = std::chrono::system_clock::now();
