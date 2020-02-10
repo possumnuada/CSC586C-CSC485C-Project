@@ -23,11 +23,10 @@ int main()
     auto end_time = std::chrono::system_clock::now();
     auto elapsed_time = std::chrono::duration_cast< std::chrono::microseconds >( end_time - start_time );
 
-    for (int i = 0 ; i < result.size(); i++){
-        std::cout << frequencies.at(i) << " " << result.at(i) << std::endl;
-    }
     double max = *max_element(std::begin(result), std::end(result));
+    auto index = find(std::begin(result), std::end(result),max);
     std::cout << "max = " << max << "\n";
+    std::cout << "index = " << frequencies.at(std::distance(std::begin(result),index)) << "\n";
     std::cout << "average time per run: "
               << elapsed_time.count() / static_cast< float >( benchmark_trials )
               << " us" << std::endl;
