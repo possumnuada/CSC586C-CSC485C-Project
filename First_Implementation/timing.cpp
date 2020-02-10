@@ -10,7 +10,7 @@
 int main()
 {
     std::vector<double> result; 
-    auto const benchmark_trials = 1u;
+    auto const benchmark_trials = 2000u;
     auto const threshold = 500llu;
 
     auto start_time = std::chrono::system_clock::now();
@@ -26,7 +26,8 @@ int main()
     for (int i = 0 ; i < result.size(); i++){
         std::cout << frequencies.at(i) << " " << result.at(i) << std::endl;
     }
-    
+    double max = *max_element(std::begin(result), std::end(result));
+    std::cout << "max = " << max << "\n";
     std::cout << "average time per run: "
               << elapsed_time.count() / static_cast< float >( benchmark_trials )
               << " us" << std::endl;
