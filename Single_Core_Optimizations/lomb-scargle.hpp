@@ -13,10 +13,12 @@ std::vector<double> lomb_scargle(std::vector<double> flux, std::vector<double> t
         sin_sum_squared = 0llu;
         sin_squared_sum = 0llu;
         for (int i = 0 ; i < flux.size(); i++){
-            cos_sum_squared += (flux[i] - flux_avg) * cos(2* M_PI *frequency[w] * (time[i] - time[0]));
-            cos_squared_sum += pow(cos(2* M_PI *frequency[w] * (time[i] - time[0])), 2);
-            sin_sum_squared += (flux[i] - flux_avg) * sin(2* M_PI *frequency[w] * (time[i] - time[0]));
-            sin_squared_sum += pow(sin(2* M_PI *frequency[w] * (time[i] - time[0])), 2);
+            double cos_result = cos(2* M_PI *frequency[w] * (time[i] - time[0]));
+            double sin_result = sin(2* M_PI *frequency[w] * (time[i] - time[0]));
+            cos_sum_squared += (flux[i] - flux_avg) * cos_result;
+            cos_squared_sum += pow(cos_result, 2);
+            sin_sum_squared += (flux[i] - flux_avg) * sin_result;
+            sin_squared_sum += pow(sin_result, 2);
         }
         cos_sum_squared = pow(cos_sum_squared, 2);
         sin_sum_squared = pow(sin_sum_squared, 2);
