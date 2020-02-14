@@ -14,24 +14,12 @@ std::vector<double> lomb_scargle(std::vector<double> flux, std::vector<double> t
         sin_squared_sum = 0llu;
         for (int i = 0 ; i < flux.size(); i++){
             cos_sum_squared += (flux[i] - flux_avg) * cos(2* M_PI *frequency[w] * (time[i] - time[0]));
-        }
-        cos_sum_squared = pow(cos_sum_squared, 2);
-        
-
-        for (int i = 0 ; i < flux.size(); i++){
             cos_squared_sum += pow(cos(2* M_PI *frequency[w] * (time[i] - time[0])), 2);
-        }
-        
-
-        for (int i = 0 ; i < flux.size(); i++){
             sin_sum_squared += (flux[i] - flux_avg) * cos(2* M_PI *frequency[w] * (time[i] - time[0]));
-        }
-        sin_sum_squared = pow(sin_sum_squared, 2);
-       
-
-        for (int i = 0 ; i < flux.size(); i++){
             sin_squared_sum += pow(cos(2* M_PI *frequency[w] * (time[i] - time[0])), 2);
         }
+        cos_sum_squared = pow(cos_sum_squared, 2);
+        sin_sum_squared = pow(sin_sum_squared, 2);
         
         periodogram.at(w) = 1 / (2 * variance) * (cos_sum_squared/cos_squared_sum + sin_sum_squared/sin_squared_sum);
     }
