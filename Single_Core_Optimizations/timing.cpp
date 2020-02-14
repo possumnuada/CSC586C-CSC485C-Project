@@ -23,7 +23,12 @@ int main()
     auto end_time = std::chrono::system_clock::now();
     auto elapsed_time = std::chrono::duration_cast< std::chrono::microseconds >( end_time - start_time );
 
-    double max = *max_element(std::begin(result), std::end(result));
+    double max = 0;
+    for (auto const el : result){
+        if(el > max) {
+            max = el;
+        }
+    }
     auto index = find(std::begin(result), std::end(result),max);
     std::cout << "max = " << max << "\n";
     std::cout << "index = " << frequencies.at(std::distance(std::begin(result),index)) << "\n";
