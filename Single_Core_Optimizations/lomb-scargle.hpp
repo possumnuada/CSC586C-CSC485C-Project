@@ -22,9 +22,10 @@ std::vector<double> lomb_scargle(std::vector<double> flux, std::vector<double> t
         cos_squared_sum = 0llu;
         sin_sum_squared = 0llu;
         sin_squared_sum = 0llu;
+        double frequency_2_pi = 2 * M_PI * frequency[w];
         for (int i = 0 ; i < sample_size ; i++){
-            double cos_result = cos(2* M_PI *frequency[w] * time[i]);
-            double sin_result = sin(2* M_PI *frequency[w] * time[i]);
+            double cos_result = cos(frequency_2_pi * time[i]);
+            double sin_result = sin(frequency_2_pi * time[i]);
             cos_sum_squared += flux[i] * cos_result;
             cos_squared_sum += cos_result * cos_result;
             sin_sum_squared += flux[i] * sin_result;
