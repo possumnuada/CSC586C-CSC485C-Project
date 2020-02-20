@@ -25,36 +25,41 @@ std::vector<double> lomb_scargle(std::vector<double> flux, std::vector<double> t
         double frequency_2_pi = 2 * M_PI * frequency[w];
         int num_unrolls = 5;
         for (int i = 0 ; i < sample_size ; i+=num_unrolls){
-            double cos_result = cos(frequency_2_pi * time[i]);
-            double sin_result = sin(frequency_2_pi * time[i]);
-            cos_sum_squared[0] += flux[i] * cos_result;
-            cos_squared_sum[0] += cos_result * cos_result;
-            sin_sum_squared[0] += flux[i] * sin_result;
-            sin_squared_sum[0] += sin_result * sin_result;
+            double frequency_2_pi_time1 = frequency_2_pi * time[i];
+            double cos_result1 = cos(frequency_2_pi_time1);
+            double sin_result1 = sin(frequency_2_pi_time1);
+            cos_sum_squared[0] += flux[i] * cos_result1;
+            cos_squared_sum[0] += cos_result1 * cos_result1;
+            sin_sum_squared[0] += flux[i] * sin_result1;
+            sin_squared_sum[0] += sin_result1 * sin_result1;
             
-            double cos_result2 = cos(frequency_2_pi * time[i + 1]);
-            double sin_result2 = sin(frequency_2_pi * time[i + 1]);
+            double frequency_2_pi_time2 = frequency_2_pi * time[i + 1];
+            double cos_result2 = cos(frequency_2_pi_time2);
+            double sin_result2 = sin(frequency_2_pi_time2);
             cos_sum_squared[1] += flux[i + 1] * cos_result2;
             cos_squared_sum[1] += cos_result2 * cos_result2;
             sin_sum_squared[1] += flux[i + 1] * sin_result2;
             sin_squared_sum[1] += sin_result2 * sin_result2;
 
-            double cos_result3 = cos(frequency_2_pi * time[i + 2]);
-            double sin_result3 = sin(frequency_2_pi * time[i + 2]);
+            double frequency_2_pi_time3 = frequency_2_pi * time[i + 2];
+            double cos_result3 = cos(frequency_2_pi_time3);
+            double sin_result3 = sin(frequency_2_pi_time3);
             cos_sum_squared[2] += flux[i + 2] * cos_result3;
             cos_squared_sum[2] += cos_result3 * cos_result3;
             sin_sum_squared[2] += flux[i + 2] * sin_result3;
             sin_squared_sum[2] += sin_result3 * sin_result3;
-            
-            double cos_result4 = cos(frequency_2_pi * time[i + 3]);
-            double sin_result4 = sin(frequency_2_pi * time[i + 3]);
+
+            double frequency_2_pi_time4 = frequency_2_pi * time[i + 3];
+            double cos_result4 = cos(frequency_2_pi_time4);
+            double sin_result4 = sin(frequency_2_pi_time4);
             cos_sum_squared[3] += flux[i + 3] * cos_result4;
             cos_squared_sum[3] += cos_result4 * cos_result4;
             sin_sum_squared[3] += flux[i + 3] * sin_result4;
             sin_squared_sum[3] += sin_result4 * sin_result4;
 
-            double cos_result5 = cos(frequency_2_pi * time[i + 4]);
-            double sin_result5 = sin(frequency_2_pi * time[i + 4]);
+            double frequency_2_pi_time5 = frequency_2_pi * time[i + 4];
+            double cos_result5 = cos(frequency_2_pi_time5);
+            double sin_result5 = sin(frequency_2_pi_time5);
             cos_sum_squared[4] += flux[i + 4] * cos_result5;
             cos_squared_sum[4] += cos_result5 * cos_result5;
             sin_sum_squared[4] += flux[i + 4] * sin_result5;
