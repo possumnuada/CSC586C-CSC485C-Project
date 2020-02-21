@@ -36,7 +36,7 @@ std::vector<double> lomb_scargle(std::vector<double> flux, std::vector<double> t
         cos_sum_squared = cos_sum_squared * cos_sum_squared;
         sin_sum_squared = sin_sum_squared * sin_sum_squared;
 
-        periodogram.at(w) = 1 / (2 * variance) * (cos_sum_squared/cos_squared_sum + sin_sum_squared/sin_squared_sum);
+        periodogram[w] = 1 / (2 * variance) * (cos_sum_squared/cos_squared_sum + sin_sum_squared/sin_squared_sum);
     }
 
     return periodogram;
