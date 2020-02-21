@@ -4,9 +4,10 @@
 std::vector<double> lomb_scargle(std::vector<double> flux, std::vector<double> time, std::vector<double> frequency, double variance){
 
     int sample_size = flux.size();
+    int num_frequencies = frequency.size();
     double cos_sum_squared, cos_squared_sum, sin_sum_squared, sin_squared_sum;
     double flux_avg = std::accumulate( flux.begin(), flux.end(), 0llu)/ sample_size;
-    std::vector<double> periodogram(frequency.size());
+    std::vector<double> periodogram(num_frequencies);
 
     double initial_time = time[0];
     for(int i = 0 ; i < sample_size ; i++){
@@ -17,7 +18,7 @@ std::vector<double> lomb_scargle(std::vector<double> flux, std::vector<double> t
         flux[i] -= flux_avg;
     }
 
-    for(int w = 0 ; w < frequency.size() ; w++){
+    for(int w = 0 ; w < num_frequencies ; w++){
         cos_sum_squared = 0llu;
         cos_squared_sum = 0llu;
         sin_sum_squared = 0llu;
