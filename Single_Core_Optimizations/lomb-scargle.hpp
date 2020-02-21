@@ -18,6 +18,8 @@ std::vector<double> lomb_scargle(std::vector<double> flux, std::vector<double> t
         flux[i] -= flux_avg;
     }
 
+    double one_over_2variance = 1 / (2 * variance);
+
     for(int w = 0 ; w < num_frequencies ; w++){
         cos_sum_squared = 0llu;
         cos_squared_sum = 0llu;
@@ -36,7 +38,7 @@ std::vector<double> lomb_scargle(std::vector<double> flux, std::vector<double> t
         cos_sum_squared = cos_sum_squared * cos_sum_squared;
         sin_sum_squared = sin_sum_squared * sin_sum_squared;
 
-        periodogram[w] = 1 / (2 * variance) * (cos_sum_squared/cos_squared_sum + sin_sum_squared/sin_squared_sum);
+        periodogram[w] = one_over_2variance * (cos_sum_squared/cos_squared_sum + sin_sum_squared/sin_squared_sum);
     }
 
     return periodogram;
