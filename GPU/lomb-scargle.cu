@@ -10,7 +10,9 @@ void periodogram_frequency(float *flux, float *time, float *frequency, float *pe
 
     if ( w < num_frequencies) {    
         double cos_sum_squared = 0llu, cos_squared_sum = 0llu, sin_sum_squared = 0llu, sin_squared_sum = 0llu;
-        // Not sure if we can do this, maybe we have to use cudaMalloc and pass in?
+        // This gave an error "error: expression must have a constant value"
+        // I think we might need to allocate all memory of dynamic size on the host and pass it in - not sure though, I need to look into this more
+        // We could allocate arrays of size sample_size * num_frequencies and pass them in
         double time2[sample_size], sins[sample_size], coss[sample_size];
         double frequency_2_pi = 2 * M_PI * frequency[w];
 

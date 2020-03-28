@@ -12,11 +12,10 @@ int main()
 {
 
     auto const benchmark_trials = 2000u;
-    auto const threshold = 500llu;
 
     auto start_time = std::chrono::system_clock::now();
 
-    double periodogram[sizeof(frequency)/sizeof(frequency[0])];
+    double periodogram[sizeof(frequencies)/sizeof(frequencies[0])];
     for( auto i = 0u; i < benchmark_trials; ++i )
     {
         lomb_scargle(input_data,times,frequencies,periodogram,.1);
