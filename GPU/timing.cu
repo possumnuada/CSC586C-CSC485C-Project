@@ -27,7 +27,7 @@ int main()
 
     double max = 0;
     int index;
-    for (int i = 0; i < sizeof(frequency)/sizeof(frequency[0]); i++ ){
+    for (int i = 0; i < sizeof(frequencies)/sizeof(frequencies[0]); i++ ){
         if(periodogram[i] > max) {
             max = periodogram[i];
             index = i;
