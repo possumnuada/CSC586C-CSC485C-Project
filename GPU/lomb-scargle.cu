@@ -4,7 +4,7 @@
 int const blocksize = 512;
 
 __global__
-void periodogram_frequency(float *flux, float *time, float *frequency, float *periodogram, float one_over_2variance, size_t sample_size, size_t num_frequencies){
+void periodogram_frequency(double *flux, double *time, double *frequency, double *periodogram, double one_over_2variance, size_t sample_size, size_t num_frequencies){
     // Calculate frequency index
     int const w = threadIdx.x + blockIdx.x * blockDim.x;
 
