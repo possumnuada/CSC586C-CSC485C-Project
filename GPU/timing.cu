@@ -18,7 +18,7 @@ int main()
     double periodogram[sizeof(frequencies)/sizeof(frequencies[0])];
     for( auto i = 0u; i < benchmark_trials; ++i )
     {
-        lomb_scargle(input_data,times,frequencies,periodogram,.1);
+        lomb_scargle(input_data,times,frequencies,periodogram,.1,sizeof(input_data)/sizeof(input_data[0]),sizeof(frequencies)/sizeof(frequencies[0]));
     }
 
 
