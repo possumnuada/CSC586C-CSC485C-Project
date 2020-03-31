@@ -40,12 +40,7 @@ void periodogram_frequency( double *time, double *flux, double *frequency, doubl
     }
 }
 
-__global__
-void calcAvg(double *flux, double *result, size_t size){
-    int const w = threadIdx.x + blockIdx.x * blockDim.x;
-    *result += flux[w];
 
-}
 
 void lomb_scargle(double *flux, double *time, double *frequency, double *periodogram, double variance, size_t sample_size, size_t num_frequencies){
 
