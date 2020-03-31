@@ -1,5 +1,10 @@
 #include <cmath>
 #include <vector>
+#include <thrust/device_vector.h>
+#include <thrust/reduce.h>
+#include <thrust/iterator/constant_iterator.h>
+#include <thrust/functional.h>
+#include <thrust/transform.h>
 
 int const blocksize = 512;
 
@@ -35,46 +40,42 @@ void periodogram_frequency( double *time, double *flux, double *frequency, doubl
     }
 }
 
+__global__
+void calcAvg(double *flux, double *result, size_t size){
+    int const w = threadIdx.x + blockIdx.x * blockDim.x;
+    *result += flux[w];
+
+}
+
 void lomb_scargle(double *flux, double *time, double *frequency, double *periodogram, double variance, size_t sample_size, size_t num_frequencies){
 
-    double *time2 = new double[sample_size];
-    double *flux2 = new double[sample_size];
-    
-    double flux_total = 0llu;
-    for(int i = 0; i<sample_size ; i++){
-        flux_total =  flux_total + flux[i];
-    }
-
-    double flux_avg = flux_total/sample_size;
-    
-    double initial_time = time[0];
-    for(int i = 0 ; i < sample_size ; i++){
-        time2[i] = time[i] - initial_time;
-        flux2[i] = flux[i] - flux_avg;
-    }
-
-    double *dev_time, *dev_flux, *dev_frequency, *dev_periodogram;
-
-    cudaMalloc( (void **) &dev_time, sample_size * sizeof(double));
-    cudaMalloc( (void **) &dev_flux, sample_size * sizeof(double));
+    double *dev_frequency, *dev_periodogram;
+    thrust::device_vector<double> time2(time,time+sample_size);
+    thrust::device_vector<double> flux2(flux,flux+sample_size);
+ 
     cudaMalloc( (void **) &dev_frequency, num_frequencies * sizeof(double));
     cudaMalloc( (void **) &dev_periodogram, num_frequencies * sizeof(double));
 
-
-    cudaMemcpy( dev_time, time2, sample_size * sizeof(double), cudaMemcpyHostToDevice );
-    cudaMemcpy( dev_flux, flux2, sample_size * sizeof(double), cudaMemcpyHostToDevice );
     cudaMemcpy( dev_frequency, frequency, num_frequencies * sizeof(double), cudaMemcpyHostToDevice );
 
-    double one_over_2variance = 1 / (2 * variance);
+    
+    double flux_avg = thrust::reduce(flux2.begin(), flux2.end())/sample_size;
+    using namespace thrust::placeholders;
+    thrust::transform(flux2.begin(), flux2.end(), flux2.begin(), _1 - flux_avg); 
+    thrust::transform(time2.begin(), time2.end(), time2.begin(), _1 - time[0]); 
 
+    double one_over_2variance = 1 / (2 * variance);
     auto const num_blocks = ceil(num_frequencies/ static_cast< float >(blocksize));
 
-    periodogram_frequency<<< num_blocks, blocksize >>>(dev_time, dev_flux, dev_frequency, dev_periodogram, one_over_2variance, sample_size, num_frequencies);
+    periodogram_frequency<<< num_blocks, blocksize >>>(thrust::raw_pointer_cast(time2.data()), thrust::raw_pointer_cast(flux2.data()), dev_frequency, dev_periodogram, one_over_2variance, sample_size, num_frequencies);
     
     //Cuda fails silently, need this to see errors
-    cudaError_t err = cudaGetLastError();
-    if (err != cudaSuccess) 
-        printf("Error: %s\n", cudaGetErrorString(err));
+    cudaError_t err2 = cudaGetLastError();
+    if (err2 != cudaSuccess) 
+        printf("Error: %s\n", cudaGetErrorString(err2));
     cudaMemcpy( periodogram, dev_periodogram, num_frequencies * sizeof(double), cudaMemcpyDeviceToHost );
+
+    cudaFree(dev_frequency);
+    cudaFree(dev_periodogram);
 }
 
