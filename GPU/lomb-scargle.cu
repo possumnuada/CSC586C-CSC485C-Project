@@ -24,14 +24,14 @@ void periodogram_frequency( double *time, double *flux, double *frequency, doubl
    
         //A potential way forward might be to split the frequencies across blocks and this across threads? I had to remove the temp arrays as there wasn't enough memory
         //Also not really sure we need them anymore as they were mainly for vectorization
-        for(int i = 0; i< sample_size;i++){
+        for(int i = 0; i< sample_size; i++){
             double coscal;
             double sincal;
-            sincospi(frequency_2 * time[i],&sincal,&coscal);
-            cos_sum_squared = fma(flux[i],coscal,cos_sum_squared);
-            cos_squared_sum = fma(coscal, coscal,cos_squared_sum);
-            sin_sum_squared = fma(flux[i], sincal,sin_sum_squared);
-            sin_squared_sum = fma(sincal, sincal,sin_squared_sum);
+            sincospi(frequency_2 * time[i], &sincal, &coscal);
+            cos_sum_squared = fma(flux[i], coscal, cos_sum_squared);
+            cos_squared_sum = fma(coscal, coscal, cos_squared_sum);
+            sin_sum_squared = fma(flux[i], sincal, sin_sum_squared);
+            sin_squared_sum = fma(sincal, sincal, sin_squared_sum);
         }
         cos_sum_squared = cos_sum_squared * cos_sum_squared;
         sin_sum_squared = sin_sum_squared * sin_sum_squared;
