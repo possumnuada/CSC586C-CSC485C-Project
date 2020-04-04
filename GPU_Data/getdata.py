@@ -1,8 +1,8 @@
 import numpy as np
 import matplotlib.pyplot as plt
-np.set_printoptions(threshold=10000000)
+np.set_printoptions(threshold=1000000000)
 rand = np.random.RandomState(42)
-n = 100000
+n = 20000
 t = n * rand.rand(n)
 y = np.sin(2 * np.pi * t) + 0.1 * rand.randn(n)
 
