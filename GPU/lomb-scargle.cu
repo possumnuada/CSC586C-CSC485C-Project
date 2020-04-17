@@ -25,13 +25,13 @@ void periodogram_frequency( double *time, double *flux, double *frequency, doubl
         //A potential way forward might be to split the frequencies across blocks and this across threads? I had to remove the temp arrays as there wasn't enough memory
         //Also not really sure we need them anymore as they were mainly for vectorization
         for(int i = 0; i< sample_size;i++){
-            double coscal;
-            double sincal;
+            float coscal;
+            float sincal;
             sincospi(frequency_2 * time[i],&sincal,&coscal);
-            cos_sum_squared = fma(flux[i],coscal,cos_sum_squared);
-            cos_squared_sum = fma(coscal, coscal,cos_squared_sum);
-            sin_sum_squared = fma(flux[i], sincal,sin_sum_squared);
-            sin_squared_sum = fma(sincal, sincal,sin_squared_sum);
+            cos_sum_squared = fma(flux[i],(double) coscal,cos_sum_squared);
+            cos_squared_sum = fma((double) coscal,(double) coscal,cos_squared_sum);
+            sin_sum_squared = fma(flux[i],(double) sincal,sin_sum_squared);
+            sin_squared_sum = fma((double) sincal,(double) sincal,sin_squared_sum);
         }
         cos_sum_squared = cos_sum_squared * cos_sum_squared;
         sin_sum_squared = sin_sum_squared * sin_sum_squared;
@@ -61,7 +61,7 @@ void lomb_scargle(double *flux, double *time, double *frequency, double *periodo
 
     double one_over_2variance = 1 / (2 * variance);
     auto const num_blocks = ceil(num_frequencies/ static_cast< float >(blocksize));
-
+ 
     periodogram_frequency<<< num_blocks, blocksize >>>(thrust::raw_pointer_cast(time2.data()), thrust::raw_pointer_cast(flux2.data()), dev_frequency, dev_periodogram, one_over_2variance, sample_size, num_frequencies);
     
     //Cuda fails silently, need this to see errors
