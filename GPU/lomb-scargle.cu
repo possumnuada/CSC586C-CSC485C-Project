@@ -6,7 +6,7 @@
 #include <thrust/functional.h>
 #include <thrust/transform.h>
 
-int const blocksize = 512;
+int const blocksize = 128;
 
 
 __global__
